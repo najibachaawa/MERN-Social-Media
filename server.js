@@ -42,7 +42,7 @@ mongoose
 
 // Routes
 app.use('/auth', authentication);
-app.use('/profile', profile);
+app.use('/profil', profile);
 app.use('/user', users);
 
 app.use('/conv', conversation);

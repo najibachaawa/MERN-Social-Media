@@ -33,8 +33,16 @@ router.post("/register", (req, res, next) => {
   if (!isValid) {
     return res.status(200).json(errors);
   }
+  
+  var newUserBody = new User({
+    name: req.body.name,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    address: req.body.address,
+    role: "user",
+  })
 
-  User.register(new User({ name: req.body.name, email: req.body.email, role: "user" }), req.body.password,
+  User.register(newUserBody, req.body.password,
     function (err) {
       if (err) {
         console.log('error while user register!', err);
