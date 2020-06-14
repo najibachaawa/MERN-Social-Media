@@ -186,32 +186,6 @@ router.post("/change_password/:token", async (req, res, next) => {
   );
 });
 
-
-router.get("/profile", passport.authenticate('jwt', { session: false }), (req, res, next) => {
-  if (req.user) {
-    console.clear()
-    const userId = req.user._id
-    console.log("userId", userId)
-    User.aggregate(
-      [
-        {
-          '$match': {
-            '_id': userId
-          }
-        },
-        {
-          '$project':{
-            'hash':0,
-            'salt':0
-          }
-        }
-      ], function (err, result) {
-        console.log(result);
-        res.status(200).json(result);
-      });
-  }
-});
-
 router.get('/facebook', passport.authenticate('facebook'));
 
 router.get('/facebook/callback',

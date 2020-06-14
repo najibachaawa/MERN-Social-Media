@@ -5,6 +5,7 @@ const passport = require("passport");
 const cors = require('cors')
 const app = express();
 const authentication = require("./routes/api/authentication.routes");
+const profile = require("./routes/api/profile.routes");
 const users = require("./routes/api/users.routes");
 
 const conversation = require("./routes/api/conversation.routes");
@@ -41,6 +42,7 @@ mongoose
 
 // Routes
 app.use('/auth', authentication);
+app.use('/profile', profile);
 app.use('/user', users);
 
 app.use('/conv', conversation);
