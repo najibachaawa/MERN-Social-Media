@@ -6,6 +6,8 @@ const { promisify } = require('util');
 const crypto = require('crypto');
 const transport = require("../../services/mailer")
 
+
+
 // Load input validation
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
@@ -32,7 +34,7 @@ router.post("/register", (req, res, next) => {
     return res.status(200).json(errors);
   }
 
-  User.register(new User({ name: req.body.name, email: req.body.email, role:"user" }), req.body.password,
+  User.register(new User({ name: req.body.name, email: req.body.email, role: "user" }), req.body.password,
     function (err) {
       if (err) {
         console.log('error while user register!', err);
@@ -185,44 +187,53 @@ router.post("/change_password/:token", async (req, res, next) => {
 });
 
 
-router.get("/getProfileJWT", async (req, res, next) => {
-
-    const id = 1
-  var user = User.findOne({ '_id': req.params.token },
-    async (err, returneduser) => {
-      if (!user) {
-        console.log("No user exists");
-      }
-
-
-
-    
-    }
-  );
+router.get("/profile", passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  if (req.user) {
+    console.clear()
+    const userId = req.user._id
+    console.log("userId", userId)
+    User.aggregate(
+      [
+        {
+          '$match': {
+            '_id': userId
+          }
+        },
+        {
+          '$project':{
+            'hash':0,
+            'salt':0
+          }
+        }
+      ], function (err, result) {
+        console.log(result);
+        res.status(200).json(result);
+      });
+  }
 });
 
-router.get('/facebook', passport.authenticate('facebook'), );
+router.get('/facebook', passport.authenticate('facebook'));
 
 router.get('/facebook/callback',
   passport.authenticate('facebook', {
     failureRedirect: '/user/login'
   }),
-  function(req, res) {
+  function (req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
-});
+  });
 
 router.get('/twitter',
   passport.authenticate('twitter'));
 
-router.get('/twitter/callback', 
+router.get('/twitter/callback',
   passport.authenticate('twitter', { failureRedirect: '/user/login' }),
-  function(req, res) {
+  function (req, res) {
     var user = req.user;
     var account = req.account;
     // Associate the Twitter account with the logged-in user.
     account.userId = user.id;
-    account.save(function(err) {
+    account.save(function (err) {
       if (err) { return self.error(err); }
       self.redirect('/');
     });
