@@ -44,6 +44,7 @@ export default class ProfilePage extends Component {
             birthDay: res.data.birthDay,
             address: res.data.address,
             imageUrl: res.data.imageUrl,
+            imageHash: Date.now()
           });
           console.log(this.state.birthDay)
           console.log("response : ", res.data)
@@ -68,6 +69,7 @@ export default class ProfilePage extends Component {
   onChangeAddress(e) {
     this.setState({ address: e.target.value })
   }
+
   updateProfile(e) {
     e.preventDefault()
 
@@ -105,7 +107,12 @@ export default class ProfilePage extends Component {
       axios.post('http://localhost:5000/profil/avatar/' + this.state.id, form, { headers: { "Authorization": `Bearer ${this.state.token}` } })
       .then((res) => {
         console.log(res.data.file)
-        this.state.imageUrl = "http://localhost:5000/"+res.data.file
+        console.clear()
+        console.log("before imageUrl : ",this.state.imageUrl)
+        // this.state.imageUrl = res.data.file
+        this.setState({ imageUrl: res.data.file })
+
+        console.log("after imageUrl : ",this.state.imageUrl)
         console.log('user successfully updated')
       }).catch((error) => {
         console.log(error)
