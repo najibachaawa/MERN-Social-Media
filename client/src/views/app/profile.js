@@ -21,8 +21,8 @@ export default class ProfilePage extends Component {
     this.updateProfile = this.updateProfile.bind(this);
 
     this.state = {
-      id : '',
-      token : '',
+      id: '',
+      token: '',
       name: '',
       lastname: '',
       email: '',
@@ -34,19 +34,19 @@ export default class ProfilePage extends Component {
   componentDidMount() {
     this.state.id = localStorage.getItem('id')
     this.state.token = localStorage.getItem('jwtToken')
-    if(this.state.id){
-      axios.get('http://localhost:5000/profil/' + this.state.id,{ headers: {"Authorization" : `Bearer ${this.state.token}`} })
+    if (this.state.id) {
+      axios.get('http://localhost:5000/profil/' + this.state.id, { headers: { "Authorization": `Bearer ${this.state.token}` } })
         .then(res => {
           this.setState({
             name: res.data.name,
             lastname: res.data.lastname,
             email: res.data.email,
             birthDay: res.data.birthDay,
-            address : res.data.address,
-            imageUrl : res.data.imageUrl,
+            address: res.data.address,
+            imageUrl: res.data.imageUrl,
           });
           console.log(this.state.birthDay)
-          console.log("response : ",res.data)
+          console.log("response : ", res.data)
         })
         .catch((error) => {
           console.log(error);
@@ -65,6 +65,15 @@ export default class ProfilePage extends Component {
   onChangeBirthDay(e) {
     this.setState({ birthDay: e.target.value })
   }
+
+  onChangeFile(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    var file = event.target.files[0];
+    console.log(file);
+    this.setState({file}); /// if you want to upload latter
+}
+
   onChangeAddress(e) {
     this.setState({ address: e.target.value })
   }
@@ -82,8 +91,8 @@ export default class ProfilePage extends Component {
 
     console.log(this.state.token)
 
-    axios.put('http://localhost:5000/profil/edit/' + this.state.id,userBody,{ headers: {"Authorization" : `Bearer ${this.state.token}`} })
-    .then((res) => {
+    axios.put('http://localhost:5000/profil/edit/' + this.state.id, userBody, { headers: { "Authorization": `Bearer ${this.state.token}` } })
+      .then((res) => {
         console.log(res.data)
         console.log('user successfully updated')
       }).catch((error) => {
@@ -100,28 +109,34 @@ export default class ProfilePage extends Component {
             <Separator className="mb-5" />
           </Colxx>
         </Row>
-        <Row style={{"textAlign": "center"}}>
+        <Row style={{ "textAlign": "center" }}>
           <Colxx md="6" className="mb-4">
-          <Label>Avatar</Label>
-            
-            <Row>
-            <Colxx md="12">
-            {this.state.imageUrl ? <img style={{"width": "150px","border-radius": "10px","margin-bottom": "10px"}} src={'http://localhost:5000/'+this.state.imageUrl}></img> : ""}
-            </Colxx>
+            <Label>Avatar</Label>
+
+
+
+            <Row style={{ "textAlign": "center" }}>
+              <Colxx xxs="12">
+                <label htmlFor="fileUpload">
+                  <Row>
+                    <Colxx md="12">
+                      {this.state.imageUrl ? <img style={{ "width": "250px", "borderRadius": "10px", "marginBottom": "10px", "cursor": "pointer" }} src={'http://localhost:5000/' + this.state.imageUrl}></img> : ""}
+                    </Colxx>
+                  </Row>
+                  <div style={{"cursor": "pointer","border":"black 0.5px " }}>
+                    <h3>Upload</h3>
+                  </div>
+                </label>
+                <input hidden id="fileUpload" type="file" accept="image/*" ref={(ref) => this.upload = ref} style={{display: 'none'}} onChange={this.onChangeFile.bind(this)} />
+                {/* <input hidden id="fileUpload" type="file" accept="image/*" onChange={this.uploadUserAvatar} /> */}
+              </Colxx>
             </Row>
-
-
-            <Row style={{"textAlign": "center"}}>
-          <Colxx xxs="12">
-            <Button type="submit" >Save</Button>
-          </Colxx>
-        </Row>
           </Colxx>
           <Colxx md="6" className="mb-4">
             {/* <p><IntlMessages id="menu.profile"/></p> */}
             <form>
               <Row>
-                <Colxx  md="6">
+                <Colxx md="6">
                   <Label>First Name</Label>
                   <Input type="text" placeholder="First Name" value={this.state.name} onChange={this.onChangeFirstName}></Input>
                 </Colxx>
@@ -150,9 +165,9 @@ export default class ProfilePage extends Component {
               </Row>
             </form>
           </Colxx>
-        
+
         </Row>
-        <Row style={{"textAlign": "right"}}>
+        <Row style={{ "textAlign": "right" }}>
           <Colxx xxs="12">
             <Button type="submit" onClick={this.updateProfile}>Save</Button>
           </Colxx>
