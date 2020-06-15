@@ -9,7 +9,10 @@ const profile = require("./routes/api/profile.routes");
 const users = require("./routes/api/users.routes");
 
 const conversation = require("./routes/api/conversation.routes");
+const path = require('path')
 
+var dir = path.join(__dirname, 'uploads');
+app.use(express.static(dir));
 app.use(cors())
 app.options('*', cors())
 

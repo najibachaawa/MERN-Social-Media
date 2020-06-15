@@ -28,6 +28,7 @@ export default class ProfilePage extends Component {
       email: '',
       birthDay: '',
       address: '',
+      imageUrl: '',
     }
   }
   componentDidMount() {
@@ -41,8 +42,8 @@ export default class ProfilePage extends Component {
             lastname: res.data.lastname,
             email: res.data.email,
             birthDay: res.data.birthDay,
-            address : res.data.address
-  
+            address : res.data.address,
+            imageUrl : res.data.imageUrl,
           });
           console.log(this.state.birthDay)
           console.log("response : ",res.data)
@@ -99,10 +100,17 @@ export default class ProfilePage extends Component {
             <Separator className="mb-5" />
           </Colxx>
         </Row>
-        <Row>
+        <Row style={{"textAlign": "center"}}>
           <Colxx md="6" className="mb-4">
           <Label>Avatar</Label>
-            <img src="../../img/google-logo.png"></img>
+            
+            <Row>
+            <Colxx md="12">
+            {this.state.imageUrl ? <img style={{"width": "150px","border-radius": "10px","margin-bottom": "10px"}} src={'http://localhost:5000/'+this.state.imageUrl}></img> : ""}
+            </Colxx>
+            </Row>
+
+
             <Row style={{"textAlign": "center"}}>
           <Colxx xxs="12">
             <Button type="submit" >Save</Button>
