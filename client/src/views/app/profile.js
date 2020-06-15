@@ -65,15 +65,6 @@ export default class ProfilePage extends Component {
   onChangeBirthDay(e) {
     this.setState({ birthDay: e.target.value })
   }
-
-  onChangeFile(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    var file = event.target.files[0];
-    console.log(file);
-    this.setState({file}); /// if you want to upload latter
-}
-
   onChangeAddress(e) {
     this.setState({ address: e.target.value })
   }
@@ -100,6 +91,29 @@ export default class ProfilePage extends Component {
       })
 
   }
+
+  onChangeFile(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    var file = event.target.files[0];
+    console.log(file);
+    // this.setState({file}); 
+
+    if(file){
+      const form = new FormData();
+      form.append("avatar", file);
+      axios.post('http://localhost:5000/profil/avatar/' + this.state.id, form, { headers: { "Authorization": `Bearer ${this.state.token}` } })
+      .then((res) => {
+        console.log(res.data.file)
+        this.state.imageUrl = "http://localhost:5000/"+res.data.file
+        console.log('user successfully updated')
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
+
+}
+
   render() {
     return (
       <Fragment>
