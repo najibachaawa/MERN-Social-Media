@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const passport = require("passport");
 var multer  = require('multer')
@@ -31,15 +32,16 @@ router.post('/avatar/:id', passport.authenticate('jwt', { session: false }), upl
   })
   
 
-router.get("/", passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    if (req.user) {
-      const userId = req.user._id
-      console.log("userId", userId)
+router.get("/:id", passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  const params = req.params  
+  if (params.id) {
+    console.log("params.id : ",params.id)
+      const userId = params.id
       User.aggregate(
         [
           {
             '$match': {
-              '_id': userId
+              '_id': mongoose.Types.ObjectId(userId)
             }
           },
           {
@@ -54,17 +56,18 @@ router.get("/", passport.authenticate('jwt', { session: false }), (req, res, nex
               message: "user not found"
             });
           } else {
-            console.log(result);
             res.status(200).json(result);
           }
         });
     }
   });
   
-  router.put("/edit", passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    if (req.user) {
-      const userId = req.user._id
+  router.put("/edit/:id", passport.authenticate('jwt', { session: false }), (req, res, next) => {
+    const params = req.params 
+    if (params.id) {
+      const userId = params.id
       var user = req.body;
+      console.log("user : ",user)
       if (user.role) {
           delete user.role
       }
