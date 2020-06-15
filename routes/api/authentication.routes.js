@@ -106,6 +106,7 @@ router.post("/login", (req, res, next) => {
           "email": user.email,
           "name": user.name,
           "role": user.role,
+          "id": user.id,
         });
       } else {
         res.status(200).json({

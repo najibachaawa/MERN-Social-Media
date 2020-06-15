@@ -18,9 +18,11 @@ export default class ProfilePage extends Component {
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangeBirthDay = this.onChangeBirthDay.bind(this);
     this.onChangeAddress = this.onChangeAddress.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.updateProfile = this.updateProfile.bind(this);
 
     this.state = {
+      id : '',
+      token : '',
       name: '',
       lastname: '',
       email: '',
@@ -29,19 +31,26 @@ export default class ProfilePage extends Component {
     }
   }
   componentDidMount() {
-    axios.get('http://localhost:5000/' + this.props.match.params.id)
-      .then(res => {
-        this.setState({
-          name: res.data.name,
-          lastname: res.data.lastname,
-          email: res.data.email,
-          birthDay: res.data.birthDay,
-
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+    this.state.id = localStorage.getItem('id')
+    this.state.token = localStorage.getItem('jwtToken')
+    if(this.state.id){
+      axios.get('http://localhost:5000/profil/' + this.state.id,{ headers: {"Authorization" : `Bearer ${this.state.token}`} })
+        .then(res => {
+          this.setState({
+            name: res.data.name,
+            lastname: res.data.lastname,
+            email: res.data.email,
+            birthDay: res.data.birthDay,
+            address : res.data.address
+  
+          });
+          console.log(this.state.birthDay)
+          console.log("response : ",res.data)
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
   }
   onChangeFirstName(e) {
     this.setState({ name: e.target.value })
@@ -58,7 +67,7 @@ export default class ProfilePage extends Component {
   onChangeAddress(e) {
     this.setState({ address: e.target.value })
   }
-  onSubmit(e) {
+  updateProfile(e) {
     e.preventDefault()
 
     const userBody = {
@@ -68,15 +77,17 @@ export default class ProfilePage extends Component {
       birthDay: this.state.birthDay,
       address: this.state.address,
     };
-    console.log("userBody : ",userBody)
 
-    // axios.put('http://localhost:4000/')
-    //   .then((res) => {
-    //     console.log(res.data)
-    //     console.log('user successfully updated')
-    //   }).catch((error) => {
-    //     console.log(error)
-    //   })
+
+    console.log(this.state.token)
+
+    axios.put('http://localhost:5000/profil/edit/' + this.state.id,userBody,{ headers: {"Authorization" : `Bearer ${this.state.token}`} })
+    .then((res) => {
+        console.log(res.data)
+        console.log('user successfully updated')
+      }).catch((error) => {
+        console.log(error)
+      })
 
   }
   render() {
@@ -115,7 +126,7 @@ export default class ProfilePage extends Component {
               <Row>
                 <Colxx xxs="6">
                   <Label>Birthday</Label>
-                  <Input type="date" placeholder="BirthDay" value={this.state.birthDay} onChange={this.onChangeBirthDay}></Input>
+                  <Input type="text" placeholder="BirthDay" value={this.state.birthDay} onChange={this.onChangeBirthDay} disabled></Input>
                 </Colxx>
                 <Colxx xxs="6">
                   <Label>Email</Label>
@@ -135,7 +146,7 @@ export default class ProfilePage extends Component {
         </Row>
         <Row style={{"textAlign": "right"}}>
           <Colxx xxs="12">
-            <Button type="submit" onClick={this.onSubmit}>Save</Button>
+            <Button type="submit" onClick={this.updateProfile}>Save</Button>
           </Colxx>
         </Row>
 

@@ -56,7 +56,7 @@ router.get("/:id", passport.authenticate('jwt', { session: false }), (req, res, 
               message: "user not found"
             });
           } else {
-            res.status(200).json(result);
+            res.status(200).json(result[0]);
           }
         });
     }

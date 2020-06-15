@@ -54,6 +54,7 @@ function* loginWithEmailPassword({ payload }) {
             localStorage.setItem("role", loginUser.role);
             localStorage.setItem("email", loginUser.email);
             localStorage.setItem("name", loginUser.name);
+            localStorage.setItem("id", loginUser.id);
             history.push('/');
         } else {
             yield put(loginUserError(loginUser.message));
