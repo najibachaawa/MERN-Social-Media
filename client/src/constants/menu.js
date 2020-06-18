@@ -24,10 +24,10 @@ const data = [
     subs: []
   },
   {
-    id: "blankpage",
+    id: "statspage",
     icon: "iconsminds-bucket",
-    label: "menu.blank-page",
-    to: "/app/blank-page"
+    label: "menu.stats-page",
+    to: "/app/stats-page"
   },{
     id: "profile",
     icon: "iconsminds-profile",

@@ -32,7 +32,7 @@ const state2 = {
     }
   ]
 }
-export default class BlankPage extends Component {
+export default class StatsPage extends Component {
   render() {
 
     return (
