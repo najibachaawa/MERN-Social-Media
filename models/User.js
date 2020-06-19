@@ -9,41 +9,33 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const UserSchema = new Schema({
   name: {
     type: String,
-    default:"",
     required: true
-  },
-  lastname: {
-    type: String,
-    default:"",
-    required: false
   },
   role: {
     type: String,
     required: true
   },
-  address: {
+  /*
+  password: {
     type: String,
-    default:""
+    required: true
   },
-  imageUrl: {
-    type: String,
-    default:""
-  },
-  birthDay: {
-    type: Date,
-    default:new Date()
-  },
-  disposabilityDate: {
-    type: Date,
-    default:new Date()
-  },
+  */
   salt: {
     type: String,
     required: true
   },
+  convs:[
+    {type:String,
+    unique:true}
+  ],
+  date: {
+    type: Date,
+    default: Date.now
+  },
   resetPasswordToken: String,
   resetPasswordExpires: Date
-},{timestamps : true});
+});
 
 UserSchema.plugin(passportLocalMongoose, {
   usernameField: "email", 
@@ -55,10 +47,11 @@ UserSchema.methods.generateJWT = function() {
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
-
+  
   return jwt.sign({
     email: this.email,
     id: this._id,
+    password:this.password,
     exp: parseInt(expirationDate.getTime() / 1000, 10),
   }, keys.secretOrKey);
 }

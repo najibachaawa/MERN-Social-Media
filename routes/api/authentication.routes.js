@@ -6,8 +6,6 @@ const { promisify } = require('util');
 const crypto = require('crypto');
 const transport = require("../../services/mailer")
 
-
-
 // Load input validation
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
@@ -33,16 +31,8 @@ router.post("/register", (req, res, next) => {
   if (!isValid) {
     return res.status(200).json(errors);
   }
-  
-  var newUserBody = new User({
-    name: req.body.name,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    address: req.body.address,
-    role: "user",
-  })
 
-  User.register(newUserBody, req.body.password,
+  User.register(new User({ name: req.body.name, email: req.body.email, role:"user" }), req.body.password,
     function (err) {
       if (err) {
         console.log('error while user register!', err);
@@ -82,14 +72,34 @@ router.post("/register", (req, res, next) => {
 router.post("/login", (req, res, next) => {
 
   // Form validation
-  const { errors, isValid } = validateLoginInput(req.body);
+ // const { errors, isValid } = validateLoginInput(req.body);
 
   // Check validation
-  if (!isValid) {
+  /*if (!isValid) {
     return res.status(400).json(errors);
-  }
+  }*/
   var user = req.body;
-  passport.authenticate('local', {
+  console.log("USER ",user)
+  User.findOne({email:user.email},(err,user)=>{
+
+    if(!user){
+      return res.status(200).json({
+        "message": "not found"
+      });
+    }
+    else{
+      const token = user.generateJWT();
+      return res.status(200).json({
+        "jwtToken": token,
+        "email": user.email,
+        "name": user.name,
+        "role": user.role,
+   
+        
+      });
+    }
+  })
+ /* passport.authenticate('local', {
     usernameField: 'email',
     passwordField: 'password'
   },
@@ -106,14 +116,15 @@ router.post("/login", (req, res, next) => {
           "email": user.email,
           "name": user.name,
           "role": user.role,
-          "id": user.id,
+     
+          
         });
       } else {
         res.status(200).json({
           "message": err
         });
       }
-    })(req, res, next)
+    })(req, res, next)*/
 });
 
 router.post("/forgot_password", async (req, res, next) => {
@@ -195,28 +206,28 @@ router.post("/change_password/:token", async (req, res, next) => {
   );
 });
 
-router.get('/facebook', passport.authenticate('facebook'));
+router.get('/facebook', passport.authenticate('facebook'), );
 
 router.get('/facebook/callback',
   passport.authenticate('facebook', {
     failureRedirect: '/user/login'
   }),
-  function (req, res) {
+  function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
-  });
+});
 
 router.get('/twitter',
   passport.authenticate('twitter'));
 
-router.get('/twitter/callback',
+router.get('/twitter/callback', 
   passport.authenticate('twitter', { failureRedirect: '/user/login' }),
-  function (req, res) {
+  function(req, res) {
     var user = req.user;
     var account = req.account;
     // Associate the Twitter account with the logged-in user.
     account.userId = user.id;
-    account.save(function (err) {
+    account.save(function(err) {
       if (err) { return self.error(err); }
       self.redirect('/');
     });
