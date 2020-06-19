@@ -15,6 +15,8 @@ router.post('/', passport.authenticate('jwt', { session: false }),  usersControl
 router.get('/', passport.authenticate('jwt', { session: false }), usersController.findAll);
 router.get('/me', passport.authenticate('jwt', { session: false }), usersController.getMe);
 router.get('/:id', passport.authenticate('jwt', { session: false }), usersController.findOne);
+router.get('/getAll', passport.authenticate('jwt', { session: false }), usersController.findAll);
+router.get('/getById/:id', passport.authenticate('jwt', { session: false }), usersController.findOne);
 router.put('/:id', passport.authenticate('jwt', { session: false }), usersController.update);
 router.delete('/:id', passport.authenticate('jwt', { session: false }), usersController.delete);
 

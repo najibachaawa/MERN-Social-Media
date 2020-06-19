@@ -13,8 +13,11 @@ const Conv = React.lazy(() =>
 const SecondMenu = React.lazy(() =>
   import(/* webpackChunkName: "viwes-second-menu" */ './second-menu')
 );
-const BlankPage = React.lazy(() =>
-  import(/* webpackChunkName: "viwes-blank-page" */ './blank-page')
+const StatsPage = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-stats-page" */ './blank-page')
+);
+const Profile = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-profile" */ './profile')
 );
 const Admin = React.lazy(() =>
   import(/* webpackChunkName: "pages" */ './admin')
@@ -48,8 +51,12 @@ class App extends Component {
                 render={props => <Admin {...props} />}
               />
               <Route
-                path={`${match.url}/blank-page`}
-                render={props => <BlankPage {...props} />}
+                path={`${match.url}/stats-page`}
+                render={props => <StatsPage {...props} />}
+              />
+              <Route
+                path={`${match.url}/profile`}
+                render={props => <Profile {...props} />}
               />
               <Redirect to="/error" />
             </Switch>

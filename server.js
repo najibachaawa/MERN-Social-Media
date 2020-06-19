@@ -64,10 +64,13 @@ mongoose
 
 
 // Routes
-app.use('/auth', authentication);
-app.use('/user', users);
 
 app.use('/conv', conversation(io));
+// Routes
+app.use('/auth', authentication);
+app.use('/profil', profile);
+app.use('/user', users);
+
 // Passport middleware
 app.use(passport.initialize());
 

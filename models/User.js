@@ -9,18 +9,34 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const UserSchema = new Schema({
   name: {
     type: String,
+    default:"",
     required: true
+  },
+  lastname: {
+    type: String,
+    default:"",
+    required: false
   },
   role: {
     type: String,
     required: true
   },
-  /*
-  password: {
+  address: {
     type: String,
-    required: true
+    default:""
   },
-  */
+  imageUrl: {
+    type: String,
+    default:""
+  },
+  birthDay: {
+    type: Date,
+    default:new Date()
+  },
+  disposabilityDate: {
+    type: Date,
+    default:new Date()
+  },
   salt: {
     type: String,
     required: true
@@ -29,13 +45,9 @@ const UserSchema = new Schema({
     {type:String,
     unique:true}
   ],
-  date: {
-    type: Date,
-    default: Date.now
-  },
   resetPasswordToken: String,
   resetPasswordExpires: Date
-});
+},{timestamps : true});
 
 UserSchema.plugin(passportLocalMongoose, {
   usernameField: "email", 

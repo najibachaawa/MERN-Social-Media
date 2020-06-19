@@ -2505,7 +2505,10 @@ button {
 .chat-input-container {
   width: 100%;
   height: 90px;
+<<<<<<< HEAD
   z-index: 1;
+=======
+>>>>>>> b54dc777aa69f98427f6d6f76f1b6c5562bba0eb
   background: $input-background;
   position: fixed;
   left: 0;
@@ -8839,6 +8842,7 @@ footer.page-footer {
   &>div{
     width: 100%;
   }
+<<<<<<< HEAD
 }
 @keyframes pop {
   from { transform: scale(1) }
@@ -8849,4 +8853,6 @@ footer.page-footer {
   border:1px solid red !important;
   animation:pop 0.2s linear 1s infinite alternate;
 
+=======
+>>>>>>> b54dc777aa69f98427f6d6f76f1b6c5562bba0eb
 }
