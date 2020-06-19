@@ -41,6 +41,10 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  convs:[
+    {type:String,
+    unique:true}
+  ],
   resetPasswordToken: String,
   resetPasswordExpires: Date
 },{timestamps : true});
@@ -55,10 +59,11 @@ UserSchema.methods.generateJWT = function() {
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
-
+  
   return jwt.sign({
     email: this.email,
     id: this._id,
+    password:this.password,
     exp: parseInt(expirationDate.getTime() / 1000, 10),
   }, keys.secretOrKey);
 }

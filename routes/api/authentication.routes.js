@@ -6,8 +6,6 @@ const { promisify } = require('util');
 const crypto = require('crypto');
 const transport = require("../../services/mailer")
 
-
-
 // Load input validation
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
@@ -195,28 +193,28 @@ router.post("/change_password/:token", async (req, res, next) => {
   );
 });
 
-router.get('/facebook', passport.authenticate('facebook'));
+router.get('/facebook', passport.authenticate('facebook'), );
 
 router.get('/facebook/callback',
   passport.authenticate('facebook', {
     failureRedirect: '/user/login'
   }),
-  function (req, res) {
+  function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
-  });
+});
 
 router.get('/twitter',
   passport.authenticate('twitter'));
 
-router.get('/twitter/callback',
+router.get('/twitter/callback', 
   passport.authenticate('twitter', { failureRedirect: '/user/login' }),
-  function (req, res) {
+  function(req, res) {
     var user = req.user;
     var account = req.account;
     // Associate the Twitter account with the logged-in user.
     account.userId = user.id;
-    account.save(function (err) {
+    account.save(function(err) {
       if (err) { return self.error(err); }
       self.redirect('/');
     });
