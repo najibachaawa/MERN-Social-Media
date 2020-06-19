@@ -6,8 +6,12 @@ const cors = require('cors')
 const app = express();
 const authentication = require("./routes/api/authentication.routes");
 const users = require("./routes/api/users.routes");
+const profile = require("./routes/api/profile.routes");
 
 const conversation = require("./routes/api/conversation.routes");
+
+
+app.use(express.static('uploads'));
 
 app.use(cors({credentials: true}));
 const url='http://localhost:3000'
