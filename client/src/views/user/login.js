@@ -16,15 +16,17 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
+      email: "najiba@gmail.com",
       password: "12345"
     };
   }
 
   onUserLogin = (values) => {
     if (!this.props.loading) {
+
       if (values.email !== "" && values.password !== "") {
-        this.props.loginUser(values, this.props.history);
+      //localStorage.setItem("passsword",values.password)
+       this.props.loginUser(values, this.props.history);
       }
     }
   }
