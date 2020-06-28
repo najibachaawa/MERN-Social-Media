@@ -93,9 +93,15 @@ export default class StatsPage extends Component {
 
         })
         debugger
+
+
+
+
         dataPerDate.map(x => x.map(y => {
-          values.push(new Date(y.created_time).toISOString().split("T")[0])
+          values.push(y.created_time)
         }))
+        values.sort((a,b)=>new Date(a) - new Date(b));
+        values = values.map(x=>new Date(x).toISOString().split("T")[0])
         occ = values.reduce((acc, it) => { if (Object.keys(acc).some(item => item == it)) return acc; else return { ...acc, [it]: values.filter(item => it == item).length }; }, {})
         Object.entries(occ).map((e) => {
 
