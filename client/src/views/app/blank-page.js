@@ -95,25 +95,25 @@ export default class StatsPage extends Component {
         debugger
         dataPerDate.map(x => x.map(y => {
           values.push(new Date(y.created_time).toISOString().split("T")[0])
-          occ = values.reduce((acc, it) => { if (Object.keys(acc).some(item => item == it)) return acc; else return { ...acc, [it]: values.filter(item => it == item).length }; }, {})
-          Object.entries(occ).map((e) => {
-
-            labels.push(e[0])
-            datas.push(e[1])
-            body = {
-              labels: labels,
-              datasets: [
-                {
-                  label: 'message',
-                  backgroundColor: 'rgba(75,192,192,1)',
-                  borderColor: 'rgba(0,0,0,1)',
-                  borderWidth: 2,
-                  data: datas
-                }
-              ]
-            }
-          });
         }))
+        occ = values.reduce((acc, it) => { if (Object.keys(acc).some(item => item == it)) return acc; else return { ...acc, [it]: values.filter(item => it == item).length }; }, {})
+        Object.entries(occ).map((e) => {
+
+          labels.push(e[0])
+          datas.push(e[1])
+          body = {
+            labels: labels,
+            datasets: [
+              {
+                label: 'message',
+                backgroundColor: 'rgba(75,192,192,1)',
+                borderColor: 'rgba(0,0,0,1)',
+                borderWidth: 2,
+                data: datas
+              }
+            ]
+          }
+        });
 
 
         bodyids = {
