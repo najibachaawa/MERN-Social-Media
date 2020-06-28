@@ -2,6 +2,34 @@ import React, { Component, Fragment } from "react";
 import axios from 'axios';
 
 import { Bar, Line } from 'react-chartjs-2';
+const state = {
+  labels: ['Monday', 'Tuesday', 'Wednesday',
+    'Thursday', 'Friday', 'Saturday', 'Sunday'],
+  datasets: [
+    {
+      label: 'minute',
+      backgroundColor: 'rgba(75,192,192,1)',
+      borderColor: 'rgba(0,0,0,1)',
+      borderWidth: 2,
+      data: [1, 5, 8, 9, 10, 12, 3]
+    }
+  ]
+}
+const state2 = {
+  labels: ['January', 'February', 'March',
+    'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  datasets: [
+    {
+      label: 'Mounth',
+      fill: false,
+      lineTension: 0.5,
+      backgroundColor: 'rgba(75,192,192,1)',
+      borderColor: 'rgba(0,0,0,1)',
+      borderWidth: 2,
+      data: [2, 4, 2, 5, 9, 6, 8, 7, 6, 5, 8, 3]
+    }
+  ]
+}
 export default class StatsPage extends Component {
 
   constructor(props) {
@@ -22,7 +50,7 @@ export default class StatsPage extends Component {
           }
         ]
       },
-      chartPerConversation : {
+      chartPerConversation: {
         labels: [],
         datasets: [
           {
@@ -54,22 +82,22 @@ export default class StatsPage extends Component {
         let datasIds = []
         let body = this.state.chartPerDate
         let bodyids = this.state.chartPerConversation
-        
+
         let occ
         let idsOcc
-        
+
         let dataPerDate = this.state.dataGroupedByDate.map(x => x.messages.data)
-        this.state.dataGroupedByDate.map((x,i) => {
-          labelsIds.push("conversation: "+i)
+        this.state.dataGroupedByDate.map((x, i) => {
+          labelsIds.push("conversation: " + i)
           datasIds.push(x.messages.data.length)
-        
+
         })
         debugger
         dataPerDate.map(x => x.map(y => {
           values.push(new Date(y.created_time).toISOString().split("T")[0])
           occ = values.reduce((acc, it) => { if (Object.keys(acc).some(item => item == it)) return acc; else return { ...acc, [it]: values.filter(item => it == item).length }; }, {})
           Object.entries(occ).map((e) => {
-            
+
             labels.push(e[0])
             datas.push(e[1])
             body = {
@@ -88,20 +116,20 @@ export default class StatsPage extends Component {
         }))
 
 
-            bodyids = {
-              labels: labelsIds,
-              datasets: [
-                {
-                  label: 'message',
-                  backgroundColor: 'rgba(75,192,192,1)',
-                  borderColor: 'rgba(0,0,0,1)',
-                  borderWidth: 2,
-                  data: datasIds
-                }
-              ]
+        bodyids = {
+          labels: labelsIds,
+          datasets: [
+            {
+              label: 'message',
+              backgroundColor: 'rgba(75,192,192,1)',
+              borderColor: 'rgba(0,0,0,1)',
+              borderWidth: 2,
+              data: datasIds
             }
+          ]
+        }
 
-        
+
 
 
 
@@ -155,6 +183,36 @@ export default class StatsPage extends Component {
             }}
           />
         </div>
+
+        <Bar
+          data={state}
+          options={{
+            title: {
+              display: true,
+              text: 'Waiting time per day',
+              fontSize: 20
+            },
+            legend: {
+              display: true,
+              position: 'right'
+            }
+          }}
+        />
+
+        <Line
+          data={state2}
+          options={{
+            title: {
+              display: true,
+              text: 'Waiting time per mounth',
+              fontSize: 20
+            },
+            legend: {
+              display: true,
+              position: 'right'
+            }
+          }}
+        />
       </div>
     );
   }
