@@ -45,6 +45,9 @@ const UserSchema = new Schema({
     {type:String,
     unique:true}
   ],
+  notes: [
+    { note: String, from: String }
+  ],
   resetPasswordToken: String,
   resetPasswordExpires: Date
 },{timestamps : true});

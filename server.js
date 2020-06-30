@@ -7,6 +7,7 @@ const app = express();
 const authentication = require("./routes/api/authentication.routes");
 const users = require("./routes/api/users.routes");
 const profile = require("./routes/api/profile.routes");
+const notes = require('./routes/api/notes.routes');
 
 const conversation = require("./routes/api/conversation.routes");
 
@@ -74,6 +75,7 @@ app.use('/conv', conversation(io));
 app.use('/auth', authentication);
 app.use('/profil', profile);
 app.use('/user', users);
+app.use('/notes', notes);
 
 // Passport middleware
 app.use(passport.initialize());
