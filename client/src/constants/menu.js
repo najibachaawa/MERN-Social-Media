@@ -24,6 +24,12 @@ const data = [
     subs: []
   },
   {
+    id: "notes",
+    icon: "iconsminds-air-balloon-1",
+    label: "Notes",
+    to: "/app/notes"
+  },
+  {
     id: "statspage",
     icon: "iconsminds-bucket",
     label: "menu.stats-page",

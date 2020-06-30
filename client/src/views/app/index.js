@@ -19,6 +19,9 @@ const StatsPage = React.lazy(() =>
 const Profile = React.lazy(() =>
   import(/* webpackChunkName: "viwes-profile" */ './profile')
 );
+const Notes = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-profile" */ './notes')
+);
 const Admin = React.lazy(() =>
   import(/* webpackChunkName: "pages" */ './admin')
 );
@@ -57,6 +60,10 @@ class App extends Component {
               <Route
                 path={`${match.url}/profile`}
                 render={props => <Profile {...props} />}
+              />
+              <Route
+                path={`${match.url}/notes`}
+                render={props => <Notes {...props} />}
               />
               <Redirect to="/error" />
             </Switch>
