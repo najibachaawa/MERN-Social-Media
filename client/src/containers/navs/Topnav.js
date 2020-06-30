@@ -36,7 +36,7 @@ import { getDirection, setDirection } from "../../helpers/Utils";
 class TopNav extends Component {
   constructor(props) {
     super(props);
-    const user=JSON.parse(localStorage.getItem("user"))
+    const user = localStorage.getItem('user') && JSON.parse(localStorage.getItem("user"))
     this.state = {
       isInFullScreen: false,
       searchKeyword: "",
