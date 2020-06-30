@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Input, Button } from "reactstrap";
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 
 class SaySomething extends Component {
   render() {
@@ -9,6 +10,7 @@ class SaySomething extends Component {
       handleChatInputPress,
       handleChatInputChange,
       handleSendButtonClick,
+      handleNoteButton,
       open
     } = this.props;
     console.log("OPEEEN ",open)
@@ -27,6 +29,12 @@ class SaySomething extends Component {
         <div>
           <Button outline color="primary" className="icon-button large ml-1">
             <i className="simple-icon-paper-clip" />
+          </Button>
+
+          <Button outline color="primary" className="icon-button large ml-1"
+            onClick={() => handleNoteButton()}
+          >
+            <NoteAddIcon />
           </Button>
 
           <Button

@@ -8,6 +8,24 @@ import ChatHeading from '../../../components/applications/ChatHeading';
 import MessageCard from '../../../components/applications/MessageCard';
 import SaySomething from "../../../components/applications/SaySomething";
 import io from 'socket.io-client';
+import { getCurrentUser } from '../../../redux/auth/auth';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+
+const AlertModal = ({ open, close, title, text }) => {
+    return (
+        <Modal isOpen={open} >
+            <ModalHeader>
+                { title }
+            </ModalHeader>
+            <ModalBody>
+                { text }
+            </ModalBody>
+            <ModalFooter>
+                <Button color='primary' onClick={close}>Close</Button>
+            </ModalFooter>
+        </Modal>
+    );
+};
 
 class index extends Component {
     state = {
@@ -24,8 +42,8 @@ class index extends Component {
         own: true,
         users: [],
         ring:false,
-        anotherUserId: ""
-
+        anotherUserId: "",
+        showModal: null
     }
     componentDidMount() {
         const socket = io('http://localhost:5000/');
@@ -127,6 +145,22 @@ class index extends Component {
         }
     }
 
+    handleNoteButton = () => {
+        if (this.state.messageInput.length > 0) {
+            if (!this.state.messageInput.match(/(\s*)(@.+@)(\s*)/)) { this.setState({ showModal: { type: 'Failure', text: 'Include a user' } }); return; }
+            const user = this.state.messageInput.match(/(\s*)(@.+@)(\s*)/)[0].replace(/@/g, '').trim();
+            getCurrentUser().then(res => {
+                axios.post(`${API_BASE_URL}/notes`, {
+                    from: res.user.name,
+                    to: user,
+                    note: this.state.messageInput.replace(/@/g, '').trim()
+                })
+                .then(res => { this.setState({ showModal: { type: 'Success', text: res.data } }) })
+                .catch(err => { this.setState({ showModal: { type: 'Failure', text: err.response.data } }) });
+            });
+        }
+    }
+
     handleChatInputChange = e => {
         this.setState({
 
@@ -182,6 +216,14 @@ class index extends Component {
     render() {
         return (
             <div className="conversations">
+                { this.state.showModal && 
+                    <AlertModal 
+                        open={this.state.showModal}
+                        title={this.state.showModal.type} 
+                        text={this.state.showModal.text} 
+                        close={() => this.setState({ showModal: null })}
+                    /> 
+                }
    {this.state.ring&&             <audio autoPlay>
 
 <source src="/assets/ring/juntos.mp3" type="audio/mpeg"/>
@@ -195,9 +237,15 @@ Your browser does not support the audio element.
 
                             </ChatHeading>
                             <div style={{ marginTop: "-94px", marginBottom: "109px" }}>
-                                {this.state.open && <React.Fragment>
-                                    {!this.state.own && <div onClick={this.assignToMe} className="btn btn-primary float-right ml-2">Assign to me</div>}
-                                    <div className="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#exampleModal">Assign to friend</div></React.Fragment>}
+                                {
+                                    this.state.open && 
+                                    <React.Fragment>
+                                        {
+                                            !this.state.own && <div onClick={this.assignToMe} className="btn btn-primary float-right ml-2">Assign to me</div>
+                                        }
+                                        <div className="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#exampleModal">Assign to friend</div>
+                                    </React.Fragment>
+                                }
                             </div>
 
                             <PerfectScrollbar
@@ -230,7 +278,7 @@ Your browser does not support the audio element.
           handleChatInputPress={this.handleChatInputPress}
           handleChatInputChange={this.handleChatInputChange}
           handleSendButtonClick={this.handleSendButtonClick}
-
+          handleNoteButton={this.handleNoteButton}
         />
                     </div>
                     <div className="col-lg-3 col-sm-12">
