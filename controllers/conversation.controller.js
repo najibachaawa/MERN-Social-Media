@@ -25,7 +25,7 @@ const getUsersImage=async (response)=>{
     })
 }
 const readConversations=async(req,res,err)=>{
-    const response=await axios.get(`${FACEBOOK}103718324649806/conversations?access_token=${TEST_ACCESS}&fields=senders`)
+    const response = await axios.get(`${FACEBOOK}103810704730785/conversations?access_token=${TEST_ACCESS}&fields=senders`)
     const profilesData=await getUsersImage(response)
     let conversations_=response.data.data.map((data,index)=>({convid:data.id,...data.senders.data[0],image:profilesData[index].profile_pic,assignedTo:null}))
     const conversations={conversations:conversations_,paging:response.data.paging}
@@ -132,6 +132,31 @@ const assignConvUser=async(req,res,err)=>{
    // io.sockets.emit("message",message)
     res.send(200)
 }
+
+const search = async(req, res) => {
+    try {
+        const response = await axios.get(`${FACEBOOK}103810704730785/conversations?access_token=${TEST_ACCESS}&fields=senders`)
+        const convs = await Promise.all(response.data.data.map(async conv => {
+            const convResponse = await axios.get(`${FACEBOOK}${conv.id}/messages?access_token=${TEST_ACCESS}&fields=message,from,to`);
+            return await Promise.all(convResponse.data.data.map(async msg => { 
+                if (msg.message.match(req.params.query)) {
+                    return { id: conv.id, sender: conv.senders.data[0] };
+                }
+            }));
+        }));
+        if (convs.length === 0) return res.status(404);
+        const result = new Array();
+        for (conv of convs.values()) {
+            for (msg of conv.values())
+                if (msg != null) result.push(msg);
+        }
+        res.json(result);
+    } catch(err) {
+        console.error(err.message);
+        return res.status(500).json(err);
+    }
+};
+
 module.exports={
     readConversations,
     readMessages,
@@ -140,5 +165,6 @@ module.exports={
     getWebhook,
     postWebhook,
     assignConv,
-    assignConvUser
+    assignConvUser,
+    search
 }
