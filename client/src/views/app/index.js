@@ -22,6 +22,9 @@ const Profile = React.lazy(() =>
 const Notes = React.lazy(() =>
   import(/* webpackChunkName: "viwes-profile" */ './notes')
 );
+const Search = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-profile" */ './search')
+);
 const Admin = React.lazy(() =>
   import(/* webpackChunkName: "pages" */ './admin')
 );
@@ -64,6 +67,10 @@ class App extends Component {
               <Route
                 path={`${match.url}/notes`}
                 render={props => <Notes {...props} />}
+              />
+              <Route
+                path={`/app/pages/search`}
+                render={props => <Search {...props} />}
               />
               <Redirect to="/error" />
             </Switch>

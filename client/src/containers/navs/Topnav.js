@@ -139,7 +139,7 @@ class TopNav extends Component {
   };
 
   search = () => {
-    this.props.history.push(searchPath + "/" + this.state.searchKeyword);
+    this.props.history.push(searchPath + "?query=" + this.state.searchKeyword);
     this.setState({
       searchKeyword: ""
     });
